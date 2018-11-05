@@ -1,0 +1,17 @@
+{
+  "name": "ssr-presentation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:charliewilco/server-side-react.git",
+  "author": "Charles ⚡ <charlespeters42@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "serve -d ",
+    "build": "mdx-deck build index.mdx",
+    "present": "mdx-deck index.mdx -p 5300"
+  },
+  "dependencies": {
+    "mdx-deck": "^1.7.7",
+    "serve": "^10.0.2"
+  }
+}
