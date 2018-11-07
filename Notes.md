@@ -8,6 +8,12 @@ Perceived page load
 Performance
 A better UX
 
+---
+
+https://medium.com/airbnb-engineering/operationalizing-node-js-for-server-side-rendering-c5ba718acfc9
+
+---
+
 Talk about progressive enhancement?
 
 ---
@@ -50,7 +56,6 @@ What do you have available on the server?
 
 - Request Headers
 - Cookies
-- 
 
 ---
 

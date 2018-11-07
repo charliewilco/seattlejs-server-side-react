@@ -6,15 +6,18 @@
   "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "serve -d dist",
     "build": "mdx-deck build index.mdx",
-    "present": "mdx-deck index.mdx -p 5300"
+    "present": "mdx-deck index.mdx -p 5300",
+    "deploy": "yarn build && now && now alias"
   },
   "dependencies": {
-    "mdx-deck": "^1.7.7",
-    "serve": "^10.0.2"
+    "mdx-deck": "^1.7.7"
   },
   "now": {
-    "alias": "seattlejs-server-side-react.now.sh"
+    "alias": "seattlejs-server-side-react.now.sh",
+    "type": "static",
+    "static": {
+      "public": "dist"
+    }
   }
 }
