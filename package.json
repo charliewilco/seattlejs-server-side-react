@@ -6,8 +6,8 @@
   "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "mdx-deck build index.mdx",
-    "present": "mdx-deck index.mdx -p 5300",
+    "build": "mdx-deck build index.md",
+    "present": "mdx-deck index.md -p 5300",
     "deploy": "yarn build && now && now alias"
   },
   "dependencies": {

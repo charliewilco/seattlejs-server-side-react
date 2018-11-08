@@ -14,7 +14,7 @@ https://medium.com/airbnb-engineering/operationalizing-node-js-for-server-side-r
 
 ---
 
-Talk about progressive enhancement?
+
 
 ---
 
