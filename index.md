@@ -14,10 +14,15 @@ export { default as theme } from './theme'
 
 ---
 
-Server-side rendering your React application means leveraging a server to send an initial render to your client. 
+## Server-side rendering your React application means leveraging a server to send an initial render to your client. 
+
+
+```notes
+We're going to use Node for our server language.
+```
 ---
 
-Server-side rendering your React application means not sending your user an empty `<div>` and a 🙏
+## Server-side rendering your React application means not sending your user an empty `<div>`, a single bundle <br />and a 🙏
 
 ---
 
@@ -28,7 +33,7 @@ Server-side rendering your React application means not sending your user an empt
 
 ---
 
-[_Isomorphic JavaScript: the future of Web Apps_](https://medium.com/airbnb-engineering/isomorphic-javascript-the-future-of-web-apps-10882b7a2ebc) from Spike Brehm, Airbnb Engineering Nov. 2013
+### [_Isomorphic JavaScript: the future of Web Apps_](https://medium.com/airbnb-engineering/isomorphic-javascript-the-future-of-web-apps-10882b7a2ebc) from Spike Brehm, Airbnb Engineering Nov. 2013
 
 ---
 
@@ -40,6 +45,13 @@ Suffer Performance Concerns.
 
 ```notes
 Talk about progressive enhancement?
+```
+---
+
+### [_7 Principles of Rich Web Applications_](https://rauchg.com/2014/7-principles-of-rich-web-applications) from Guillermo Rauch, Nov. 2014
+
+```notes
+The one thing i like about this post is that makes the point about single page applications and server-rendering being a false dichotomy. It's not either or, it's one hand washing the other.
 ```
 
 ---
@@ -57,6 +69,10 @@ Server side rendering your React application
 ![ Gif of Create React App loading on a slow connection ](./assets/CRA-loading.gif)
 
 ---
+
+```notes
+Bring up client-side demo
+```
 
 ---
 
@@ -94,34 +110,41 @@ and an `index.html`:
 
 ---
 
-![A gif goes here of the Server rendered app]()
+![A gif goes here of the Server rendered app](./assets/RAZZLE-demo.gif)
 
 ---
 
 ```jsx
 import React from "react";
 import { renderToString } from "react-dom/server";
-import express from "express";
 import App from "./components/App";
 
-const app = express();
-
-function template(props) {
-  const app = renderToString(<App {...props} />)
+export default function template(props) {
   return `
-      <!DOCTYPE html>
-      <html>
-      <head>
-          <meta charset="utf-8">
-          <title>SSR</title>
-      </head>
-      <body>
-          <div id="root">${app}</div>
-          <script src="./client.js"></script>
-      </body>
-      </html>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>SSR</title>
+    </head>
+    <body>
+        <div id="root">${renderToString(<App {...props} />)}</div>
+        <script src="./client.js"></script>
+    </body>
+    </html>
   `;
 }
+```
+
+---
+
+## Add our template function to our response callback
+
+```jsx
+import express from "express";
+import template from "./template";
+
+const app = express();
 
 app.get("/*", (req, res) => {
   res.status(200).send(template())
@@ -143,6 +166,9 @@ ReactDOM.hydrate(<App />, document.getElementById('root'));
 
 ---
 
+```notes
+Here we've given the result of data fetching to App via props on the server
+```
 
 ---
 
@@ -150,7 +176,6 @@ ReactDOM.hydrate(<App />, document.getElementById('root'));
 
 + Routing
 + Fetching Data
-+ Dynamic Imports
 
 ---
 
@@ -159,6 +184,13 @@ ReactDOM.hydrate(<App />, document.getElementById('root'));
 - Components only has a truncated lifecycle: `constructor()`, `UNSAFE_componentWillMount()` 😳
 - Essentially: no `setState()` 🚫
 - matchMedia, localStorage, fetch are all gone, kinda ☠️
+
+```notes
+There are lots of universal fetch packages to use that mimic the browser API
+
+
+and if you're highly dependent on localStorage and matchMedia and you can mock them on the `global` object in node
+```
 
 ---
 
@@ -219,28 +251,77 @@ app.get("/*", (req, res) => {
 });
 ```
 
+```notes
+We have to give StaticRouter a context object to give the client from the server. It can be an empty object.
+```
+
 ---
 
 # Fetching Data
 
 ---
 
-- Hoist your Data Fetching
-- 
+- Hoist your Data Fetching fetching outside your application
+- Leverage `async`/`await`
+- Coupling a component's data fetching to it's implementation is possible but 😖
+
+```notes
+There are lots of implementations of coupling data-fetching to 
+
+```
 
 ---
 
-# Dynamic Imports
+## Updating our response callback
+
+```js
+async (req, res) => {
+  const data = await fetch('endpoint/').then(res => res.json())
+  const markup = renderToString(<App {...data} />)
+  
+  res.send(markup)
+}
+```
 
 ---
 
-- React Loadable
+## Coupling data-fetching implementation
+
+```js
+class App extends React.Component {
+  static async getInitialProps() {
+    const data = await fetch('endpoint/').then(res => res.json())
+    return { data }
+  }
+}
+```
+
+---
+
+## Authentication
+
+---
+
+# 🍪
+
+You can grab your token from the server and call the same endpoint as that user.
+
+```js
+async (req, res) => {
+  const { TOKEN } = req.cookies
+  const data = await fetch('endpoint/', { headers: { Authorization: TOKEN } }).then(res => res.json())
+}
+```
 
 ---
 
 # PRO-TIP
 
 Don't travel alone. 🚀
+
+---
+
+# Use a framework 🛠
 
 ---
 
@@ -254,12 +335,45 @@ Don't travel alone. 🚀
 
 ---
 
+# Getting started with Next.js
+
+1. `yarn add react react-dom next`
+2. Add some scripts `{ "dev": "next" }`
+3. Create `pages/index.js`
+4. 🔥🌎⚡️🌈🍷
+
+---
+
 Hooks and Suspense
 
 ```notes
-
+Not gonna lie, most of this is going to be speculatio on suspense because we haven't seen an API on that.
+But....Hooks as long they flow
 ```
 
+---
+
+```js
+const ThemeContext = React.createContext({ dark: true });
+
+function App(props) {
+  const [open, setOpen] = React.useState(false);
+  const context = React.useContext(ThemeContext);
+
+  return (
+    <div
+      className="App"
+      style={{
+        background: context.dark ? 'black' : 'white',
+        color: context.dark ? 'white' : 'black'
+      }}>
+      <h1>Hello {props.name}</h1>
+      {open && 'I AM OPEN'}
+      <button onClick={() => setOpen(!open)}>Toggle</button>
+    </div>
+  );
+}
+```
 ---
 
 # Questions
