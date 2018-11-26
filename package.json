@@ -1,8 +1,7 @@
 {
   "name": "ssr-presentation",
   "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github.com:charliewilco/server-side-react.git",
+  "repository": "charliewilco/server-side-react.git",
   "author": "Charles ⚡ <charlespeters42@gmail.com>",
   "license": "MIT",
   "scripts": {
