@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "alias": "seattlejs-server-side-react.now.sh",
+  "builds": [
+    { "src": "index.mdx", "use": "@now/mdx-deck" }
+  ]
+}
